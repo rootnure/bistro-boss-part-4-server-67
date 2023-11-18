@@ -27,14 +27,31 @@ async function run() {
 
         const menuCollection = client.db("bistroBoss").collection("menu");
         const reviewCollection = client.db("bistroBoss").collection("reviews");
+        const cartCollection = client.db("bistroBoss").collection("cart");
 
+        // menu related api
         app.get("/menu", async (req, res) => {
             const result = await menuCollection.find().toArray();
             res.send(result);
         })
 
+        // review related api
         app.get("/reviews", async (req, res) => {
             const result = await reviewCollection.find().toArray();
+            res.send(result);
+        })
+
+        // cart related api
+        /* carts collection */
+        app.get("/cart", async(req,res) => {
+            const cursor = {email: req.query.email}
+            const result = await cartCollection.find(cursor).toArray();
+            res.send(result);
+        })
+
+        app.post("/cart", async(req,res) => {
+            const cart = req.body;
+            const result = await cartCollection.insertOne(cart);
             res.send(result);
         })
 
@@ -57,3 +74,15 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
     console.log(`Boss is online in port ${port}`);
 })
+
+/**
+ * --------------------------------------
+ *         NAMING CONVENTION
+ * --------------------------------------
+ * app.get('/users')
+ * app.get('/users/:id')
+ * app.post('/users')
+ * app.put('/users/:id')
+ * app.patch('/users/:id')
+ * app.delete('users/:id')
+ */
